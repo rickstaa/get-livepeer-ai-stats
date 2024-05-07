@@ -1,6 +1,4 @@
-"""A Small script that fetches the AI fees from the hosted Subgraph and prints them
-to the console.
-"""
+"""Fetches the AI fees from the hosted Subgraph and prints them to the console."""
 
 from gql import Client, gql
 from gql.transport.requests import RequestsHTTPTransport

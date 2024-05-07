@@ -1,14 +1,25 @@
-# Get AI Fees
+# Livepeer AI Subnet Statistics
 
-A simple python script to get the Livepeer AI subnet fees for a given set of Gateways.
+This repository contains Python scripts for retrieving statistics about the Livepeer AI subnet.
 
-## Usage
+## Scripts
 
-1. Install requirements with pip.
-2. Run the script.
+- `get_ai_orchs.py`: Retrieves the number of orchestrators in the AI subnet.
+
+## Setup and Usage
+
+1. Rename the `.env.template` file to `.env`.
+2. Update the `.env` file with the appropriate values for your environment.
+3. Install the required Python packages using pip:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. Run one of the scripts. For example:
 
    ```bash
    python get_ai_fees.py
    ```
 
-3. The script will output the fees in AI.
+5. The script will display the statistics in the console. Some scripts also save the results to a file in the `output` directory.

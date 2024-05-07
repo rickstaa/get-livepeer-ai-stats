@@ -1,1 +1,3 @@
 gql[all]
+requests
+web3
