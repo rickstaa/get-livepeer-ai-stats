@@ -51,6 +51,29 @@ def get_transcoder_pool(bonding_manager):
     return transcoders
 
 
+def get_ai_orchestrators_uris(service_registry, orchestrators):
+    """Get the list of AI orchestrators URIs.
+
+    Args:
+        service_registry: The AIServiceRegistry contract instance.
+        orchestrators: The list of orchestrator addresses.
+
+    Returns:
+        A list of AI orchestrator URIs.
+    """
+    ai_orchestrators_uris = []
+    for orchestrator in orchestrators:
+        try:
+            ai_orchestrator_uri = service_registry.functions.getServiceURI(orchestrator).call()
+            if ai_orchestrator_uri:
+                ai_orchestrators_uris.append(ai_orchestrator_uri)
+                print(f"Orchestrator: {orchestrator}, AI Orchestrator URI: {ai_orchestrator_uri}")
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            continue
+    return ai_orchestrators_uris
+
+
 if __name__ == "__main__":
     # Connect to the RPC endpoint and instantiate the contracts.
     w3 = Web3(Web3.HTTPProvider(RCP_URI))
@@ -72,20 +95,11 @@ if __name__ == "__main__":
             f.write(f"{orchestrator}\n")
 
     print("Fetching AI Orchestrators...")
-    ai_orchestrators = []
-    for orchestrators in orchestrators:
-        try:
-            orchestrator = service_registry.functions.getServiceURI(orchestrators).call()
-            if orchestrator:
-                print(f"AI Orchestrator: {orchestrator}")
-                ai_orchestrators.append(orchestrator)
-        except Exception as e:
-            print(f"An error occurred: {e}")
-            continue
+    ai_orchestrators_uris = get_ai_orchestrators_uris(service_registry, orchestrators)
 
     print(f"Store the AI Orchestrators in {OUTPUT_DIR}/ai_orchestrators.txt")
     with open(os.path.join(OUTPUT_DIR, "ai_orchestrators.txt"), "w") as f:
-        for ai_orchestrator in ai_orchestrators:
-            f.write(f"{ai_orchestrator}\n")
+        for orchestrator, ai_orchestrator in zip(orchestrators, ai_orchestrators_uris):
+            f.write(f"{orchestrator} {ai_orchestrator}\n")
 
-    print(f"Total number of AI Orchestrators: {len(ai_orchestrators)}")
+    print(f"Total number of AI Orchestrators: {len(ai_orchestrators_uris)}")
