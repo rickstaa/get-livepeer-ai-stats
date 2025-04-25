@@ -59,14 +59,14 @@ def get_ai_orchestrators_uris(service_registry, orchestrators):
         orchestrators: The list of orchestrator addresses.
 
     Returns:
-        A list of AI orchestrator URIs.
+        A dictionary of orchestrator addresses and their corresponding AI orchestrator URIs.
     """
-    ai_orchestrators_uris = []
+    ai_orchestrators_uris = {}
     for orchestrator in orchestrators:
         try:
             ai_orchestrator_uri = service_registry.functions.getServiceURI(orchestrator).call()
             if ai_orchestrator_uri:
-                ai_orchestrators_uris.append(ai_orchestrator_uri)
+                ai_orchestrators_uris[orchestrator] = ai_orchestrator_uri
                 print(f"Orchestrator: {orchestrator}, AI Orchestrator URI: {ai_orchestrator_uri}")
         except Exception as e:
             print(f"An error occurred: {e}")
@@ -99,7 +99,7 @@ if __name__ == "__main__":
 
     print(f"Store the AI Orchestrators in {OUTPUT_DIR}/ai_orchestrators.txt")
     with open(os.path.join(OUTPUT_DIR, "ai_orchestrators.txt"), "w") as f:
-        for orchestrator, ai_orchestrator in zip(orchestrators, ai_orchestrators_uris):
+        for orchestrator, ai_orchestrator in ai_orchestrators_uris.items():
             f.write(f"{orchestrator} {ai_orchestrator}\n")
 
     print(f"Total number of AI Orchestrators: {len(ai_orchestrators_uris)}")
